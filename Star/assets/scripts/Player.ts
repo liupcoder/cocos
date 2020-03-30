@@ -50,20 +50,37 @@ export default class NewClass extends cc.Component {
     }
 
     onLoad() {
-        this.node.runAction(this.setJumpAction());
+        this.enabled = false;
         // 事件监听
         cc.systemEvent.on(cc.SystemEvent.EventType.KEY_DOWN, this.onKeyDown, this);
         cc.systemEvent.on(cc.SystemEvent.EventType.KEY_UP, this.onKeyUp, this);
+
+        const touchReceiver = cc.Canvas.instance.node;
+        touchReceiver.on('touchstart', this.onTouchStart, this);
+        touchReceiver.on('touchend', this.onTouchEnd, this);
+
+    }
+    onTouchStart(event) {
+        const touchLoc = event.getLocation();
+        if (touchLoc.x >= cc.winSize.width / 2) {
+            this.accLeft = false;
+            this.accRight = true;
+        } else {
+            this.accLeft = true;
+            this.accRight = false;
+        }
+    }
+    onTouchEnd(event) {
+        this.accLeft = false;
+        this.accRight = false;
     }
 
     onKeyDown(event) {
         switch (event.keyCode) {
             case cc.macro.KEY.a:
-                console.log('a keydown')
                 this.accLeft = true;
                 break;
             case cc.macro.KEY.d:
-                console.log('a keydown')
                 this.accRight = true;
                 break;
         }
@@ -72,11 +89,9 @@ export default class NewClass extends cc.Component {
     onKeyUp(event) {
         switch (event.keyCode) {
             case cc.macro.KEY.a:
-                console.log('a keydown')
                 this.accLeft = false;
                 break;
             case cc.macro.KEY.d:
-                console.log('a keydown')
                 this.accRight = false;
                 break;
         }
@@ -96,10 +111,34 @@ export default class NewClass extends cc.Component {
             this.xSpeed = this.maxMoveSpeed * this.xSpeed / Math.abs(this.xSpeed);
         }
         this.node.x += this.xSpeed * dt;
+
+        if (this.node.x > this.node.parent.width / 2 - this.node.width / 2) {
+            this.node.x = this.node.parent.width / 2 - this.node.width / 2;
+            this.xSpeed = 0;
+        } else if (this.node.x < -this.node.parent.width / 2 + this.node.width / 2) {
+            this.node.x = -this.node.parent.width / 2 + this.node.width / 2;
+            this.xSpeed = 0;
+        }
     }
 
     onDestroy() {
         cc.systemEvent.off(cc.SystemEvent.EventType.KEY_DOWN, this.onKeyDown, this);
         cc.systemEvent.off(cc.SystemEvent.EventType.KEY_UP, this.onKeyUp, this);
+    }
+    // 初始化
+    init(pos) {
+        this.enabled = true;
+        this.xSpeed = 0;
+        this.node.setPosition(pos);
+        this.node.runAction(this.setJumpAction());
+    }
+
+    stopMove() {
+        this.node.stopAllActions();
+    }
+
+    getCenterPos() {
+        const center = cc.v2(this.node.x, this.node.y + this.node.height / 2);
+        return center;
     }
 }

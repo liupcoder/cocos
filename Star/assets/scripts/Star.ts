@@ -18,14 +18,17 @@ export default class NewClass extends cc.Component {
     game = null;
     // LIFE-CYCLE CALLBACKS:
 
-    // onLoad () {}
+    onLoad() {
+        this.enabled = false;
+    }
 
     start() {
 
     }
 
     getPlayerDistance() {
-        const playerPos = this.game.player.getPosition();
+        // const playerPos = this.game.player.getPosition();
+        const playerPos = this.game.player.getCenterPos();
         return this.node.position.sub(playerPos).mag();
     }
 
@@ -33,7 +36,8 @@ export default class NewClass extends cc.Component {
         // 随机创建一个新的星星的实例
         this.game.spawnNewStar();
         // 更新分数
-        this.game.gainScore();
+        const pos = this.node.getPosition();
+        this.game.gainScore(pos);
         // 将原有的星星销毁
         this.node.destroy();
     }
@@ -44,5 +48,10 @@ export default class NewClass extends cc.Component {
             this.onPicked();
             return
         }
+    }
+    init(game) {
+        this.enabled = true;
+        this.game = game;
+        this.node.opacity = 255;
     }
 }
