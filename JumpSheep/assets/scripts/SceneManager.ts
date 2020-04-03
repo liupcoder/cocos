@@ -26,8 +26,7 @@ export default class NewClass extends cc.Component {
     });
   }
 
-
-  spawnDust( prefab, compType, parent) {
+  spawnDust(prefab, compType, parent) {
     let comp = this._dustPool.get(compType);
     if (!comp) {
       comp = cc.instantiate(prefab);
@@ -42,9 +41,10 @@ export default class NewClass extends cc.Component {
     comp.active = true;
     return comp;
   }
-  spawnPipe( prefab, compType, parent) {
+  spawnPipe(prefab, compType, parent) {
     let comp = this._pipePool.get(compType);
     if (!comp) {
+      console.log("---instantiate spawnPipe---");
       comp = cc.instantiate(prefab);
       this._pipePool.put(comp);
     }
@@ -55,6 +55,8 @@ export default class NewClass extends cc.Component {
       comp.x = this.spawnX;
     }
     comp.active = true;
+    console.log("--- spawnPipe---");
+
     return comp;
   }
   despawn(comp) {
@@ -71,8 +73,8 @@ export default class NewClass extends cc.Component {
     return false;
   }
 
-
   putIntoPipePool(val) {
+    console.log("123");
     const oldCount = this._pipePool.size;
     this._pipePool.put(val);
     if (oldCount < this._pipePool.size) {

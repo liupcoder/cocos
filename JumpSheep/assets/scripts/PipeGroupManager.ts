@@ -34,6 +34,7 @@ export default class NewClass extends cc.Component {
     pipeGroup.position = cc.v2(this.spawnX, 0);
   }
   despawn(node) {
+    console.log("despawn Pipe");
     node.removeFromParent();
     node.active = false;
     Global.sceneManager.putIntoPipePool(node);
@@ -45,7 +46,6 @@ export default class NewClass extends cc.Component {
     const children = this.node.children;
     children.forEach((node, index) => {
       node.x += distance;
-
       // 消失的管道回收
       const bounds = node.getBoundingBoxToWorld();
       const disappear = bounds.xMax < 0;

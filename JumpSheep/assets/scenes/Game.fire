@@ -1064,8 +1064,8 @@
       "__uuid__": "1a1213b3-2e20-4108-bae3-bab2bba58b7b"
     },
     "spawnInterval": 2,
-    "spawnX": 1200,
-    "speed": -400,
+    "spawnX": 1500,
+    "speed": -500,
     "_id": "52BOhvs6ZHPar6OV3aSf4Z"
   },
   {
