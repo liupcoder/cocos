@@ -42,6 +42,9 @@ export default class NewClass extends cc.Component {
 
   @property(cc.Prefab)
   dustPrefab: cc.Prefab = null;
+
+  @property(cc.Node)
+  score: cc.Node = null;
   anim: cc.Animation = null;
   currentSpeed: number = 0;
   // 更新动画
@@ -89,10 +92,12 @@ export default class NewClass extends cc.Component {
   }
 
   spawnDust(animName) {
-    console.log("spawnDust");
-
     // 动态创建dust
-    const dust = Global.sceneManager.spawnDust(this.dustPrefab, Dust, this.node);
+    const dust = Global.sceneManager.spawnDust(
+      this.dustPrefab,
+      Dust,
+      this.node
+    );
     dust.position = cc.v2(0, 0);
     dust.getComponent("Dust").playAnim(animName);
   }
@@ -101,6 +106,9 @@ export default class NewClass extends cc.Component {
 
   start() {}
 
+  onDropFinished() {
+    this.state = State.Run;
+  }
   update(dt) {
     switch (this.state) {
       case State.Jump:
@@ -122,6 +130,36 @@ export default class NewClass extends cc.Component {
     if (flying) {
       this.currentSpeed -= this.gravity * dt;
       this.node.y += this.currentSpeed * dt;
+    }
+    // this.score.getComponent("cc.Label").string("分数: ", Global.score);
+  }
+  /**
+   * 当碰撞产生的时候调用
+   * @param  {Collider} other 产生碰撞的另一个碰撞组件
+   * @param  {Collider} self  产生碰撞的自身的碰撞组件
+   */
+  onCollisionEnter(other, self) {
+    console.log("other: ", other);
+    console.log("self: ", self);
+    if (this.state !== State.Dead) {
+      const group = cc.game.groupList[other.node.groupIndex];
+      console.log(group);
+      console.log(cc.game.groupList);
+
+      switch (group) {
+        case "Obstacle":
+          this.state = State.Dead;
+          Global.game.gameOver();
+          this.enableInput(false);
+          break;
+        case "NextPipe":
+          console.log("NextPipe");
+          Global.score += 1;
+          this.score.getComponent("cc.Label").string = "分数:" + Global.score;
+          break;
+        default:
+          break;
+      }
     }
   }
 }

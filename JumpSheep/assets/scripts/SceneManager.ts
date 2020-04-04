@@ -4,7 +4,6 @@ import Dust from "./Dust";
 
 @ccclass
 export default class NewClass extends cc.Component {
-  _pool: cc.NodePool = null;
   _dustPool: cc.NodePool = null;
   _pipePool: cc.NodePool = null;
 
@@ -15,9 +14,6 @@ export default class NewClass extends cc.Component {
   onLoad() {
     Global.sceneManager = this;
     // 实例化对象池
-    this._pool = new cc.NodePool(obj => {
-      console.log("clear obj success");
-    });
     this._dustPool = new cc.NodePool(obj => {
       console.log("clear obj success");
     });
@@ -44,7 +40,6 @@ export default class NewClass extends cc.Component {
   spawnPipe(prefab, compType, parent) {
     let comp = this._pipePool.get(compType);
     if (!comp) {
-      console.log("---instantiate spawnPipe---");
       comp = cc.instantiate(prefab);
       this._pipePool.put(comp);
     }
@@ -55,8 +50,6 @@ export default class NewClass extends cc.Component {
       comp.x = this.spawnX;
     }
     comp.active = true;
-    console.log("--- spawnPipe---");
-
     return comp;
   }
   despawn(comp) {
@@ -74,7 +67,6 @@ export default class NewClass extends cc.Component {
   }
 
   putIntoPipePool(val) {
-    console.log("123");
     const oldCount = this._pipePool.size;
     this._pipePool.put(val);
     if (oldCount < this._pipePool.size) {

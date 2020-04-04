@@ -4434,6 +4434,7 @@ declare namespace cc {
 		<br/>
 		注意：请不要直接修改这个对象，它不会有任何效果。 */
 		config: any;		
+    groupList: any;
 		/**
 		!#en Callback when the scripts of engine have been load.
 		!#zh 当引擎完成启动后的回调函数。 

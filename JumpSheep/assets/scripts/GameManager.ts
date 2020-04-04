@@ -17,6 +17,11 @@ export default class GameManager extends cc.Component {
   onLoad() {
     // 将 GameManager 类型放入全局数据
     Global.GameManager = GameManager;
+    Global.game = this;
+    // 开启碰撞检测系统
+    const manager = cc.director.getCollisionManager();
+    manager.enabled = true;
+    // manager.enabledDebugDraw = true;
     this.state = State.Menu;
     this.sheep.init();
   }
@@ -27,6 +32,11 @@ export default class GameManager extends cc.Component {
     this.sheep.startRun();
 
     Global.pipeManager.startSpawn();
+  }
+
+  gameOver() {
+    Global.pipeManager.reset();
+    this.state = State.Over;
   }
 
   // update (dt) {}

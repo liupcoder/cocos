@@ -23,8 +23,11 @@ export default class NewClass extends cc.Component {
     this.schedule(this.spawnPipe, this.spawnInterval);
   }
 
+  reset() {
+    this.unschedule(this.spawnPipe);
+  }
+
   spawnPipe() {
-    console.log("spawnPipe");
     // 动态创建Pipe
     const pipeGroup = Global.sceneManager.spawnPipe(
       this.pipePrefab,
@@ -34,13 +37,15 @@ export default class NewClass extends cc.Component {
     pipeGroup.position = cc.v2(this.spawnX, 0);
   }
   despawn(node) {
-    console.log("despawn Pipe");
     node.removeFromParent();
     node.active = false;
     Global.sceneManager.putIntoPipePool(node);
   }
 
   update(dt) {
+    if (Global.game.state !== Global.GameManager.State.Run) {
+      return false;
+    }
     const distance = this.speed * dt;
     // 获取当前节点的所有pipegourp子节点
     const children = this.node.children;
